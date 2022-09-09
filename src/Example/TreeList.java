@@ -9,27 +9,32 @@ import java.util.ArrayList;
 
 public class TreeList { 
 
-	static TreeNode top; 
+	static TreeNode top; // AKA "root" 
 
 	public static void main(String[] args) throws Exception { 
-		Path currentPath = Paths.get("S:\\eclipse-workspace\\cen4025c-Assignment1"); 
-		top = new TreeNode(); 
-		listDir(top, currentPath); 
-		writeTree(top, 0); 
+		Path currentPath = Paths.get("S:\\eclipse-workspace\\cen4025c-Assignment1");
+		
+		top = new TreeNode(); // Create a new TreeNode to use as the top/root.
+		
+		listDir(top, currentPath); // Adds nodes to tree. 
+		writeTree(top, 0); // Outputs tree to console.
 	}
 	
 	public static void listDir(TreeNode treeNode, Path path) throws Exception { 
-		DirectoryStream<Path> paths = Files.newDirectoryStream(path); 
-		treeNode.name = path.getFileName().toString(); 
-		for(Path tempPath: paths) { 
-			BasicFileAttributes attr = Files.readAttributes(tempPath, BasicFileAttributes.class);
+		DirectoryStream<Path> paths = Files.newDirectoryStream(path);
+		
+		treeNode.name = path.getFileName().toString();
+		
+		for(Path tempPath: paths) {
+			BasicFileAttributes attr = Files.readAttributes(tempPath, BasicFileAttributes.class); // Get the folder/files attributes.
+			
 			if(attr.isDirectory()) {
-				TreeNode t = new TreeNode();
-				treeNode.listOfSubFolders.add(t);
-				listDir(t, tempPath);
+				TreeNode t = new TreeNode(); // If the path is pointing to a directory, create a new tree node.
+				treeNode.listOfSubFolders.add(t); // Add the new tree node to the listOfSubFolders, AKA children.
+				listDir(t, tempPath); // Call the method again to go a level deeper.
 			} else {
-				treeNode.numFiles++;
-				treeNode.totalSizeOfFiles += tempPath.toFile().length();
+				treeNode.numFiles++; // If the path is pointing to a file, increment the number of files up on the current node.
+				treeNode.totalSizeOfFiles += tempPath.toFile().length(); // Get the size of the file and add it to the total size stored in the node. 
 			}
 		}
 	}
