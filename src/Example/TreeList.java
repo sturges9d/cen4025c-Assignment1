@@ -31,7 +31,10 @@ public class TreeList {
 			if(attr.isDirectory()) {
 				TreeNode t = new TreeNode(); // If the path is pointing to a directory, create a new tree node.
 				treeNode.listOfSubFolders.add(t); // Add the new tree node to the listOfSubFolders, AKA children.
+//				treeNode.isFolder = true;
+				treeNode.numFolders += 1;
 				listDir(t, tempPath); // Call the method again to go a level deeper.
+//				treeNode.totalSizeOfFiles += t.totalSizeOfFiles;
 			} else {
 				treeNode.numFiles++; // If the path is pointing to a file, increment the number of files up on the current node.
 				treeNode.totalSizeOfFiles += tempPath.toFile().length(); // Get the size of the file and add it to the total size stored in the node.
@@ -40,14 +43,20 @@ public class TreeList {
 				t2.numFiles = 1;
 				t2.totalSizeOfFiles = (int) tempPath.toFile().length();
 				treeNode.listOfSubFolders.add(t2);
-				// TODO Add a Folder count to this.
-				// TODO Add boolean if node is a folder or not. To denote folder vs file. Use this to put a symbol at the front of the folder/file name to denote folder(+) or file(-).
 			}
 		}
 	}
 	
 	public static void writeTree(TreeNode treeNode, int depth) throws Exception {
-		System.out.print(spacesForDepth(depth) + treeNode.name); // Print the node (file/folder) name with spaces in front based on how deep in the directory it is.
+		System.out.print(spacesForDepth(treeNode, depth) + treeNode.name); // Print the node (file/folder) name with spaces in front based on how deep in the directory it is.
+//		if (treeNode.numFolders > 0) {
+//			System.out.print(", " + treeNode.numFolders + " Folder(s)"); // Print the count of folders in the file.
+//		}
+//		if (treeNode.numFiles > 0) {
+//			System.out.print(", " + treeNode.numFiles + " File(s)"); // Print the count of files on the same line.
+//			System.out.println(", " + treeNode.totalSizeOfFiles + " bytes"); // Print the sum of the file sizes on the same line, and go to new line.
+//		}
+		System.out.print(", " + treeNode.numFolders + " Folder(s)"); // Print the count of folders in the file.
 		System.out.print(", " + treeNode.numFiles + " File(s)"); // Print the count of files on the same line.
 		System.out.println(", " + treeNode.totalSizeOfFiles + " bytes"); // Print the sum of the file sizes on the same line, and go to new line.
 		for(TreeNode node : treeNode.listOfSubFolders) {
@@ -55,17 +64,24 @@ public class TreeList {
 		}
 	}
 	
-	public static String spacesForDepth(int depth) {
+	public static String spacesForDepth(TreeNode treeNode, int depth) {
 		StringBuilder builder = new StringBuilder();
 		for(int i = 0; i < depth; i++) {
 			builder.append("    ");
 		}
+//		if (treeNode.isFolder == true) {
+//			builder.append("+");
+//		} else {
+//			builder.append("-");
+//		}
 	return builder.toString();
 	}
 }
 
 class TreeNode {
 	String name;
+//	boolean isFolder; // Added for output symbol.
+	int numFolders; // Added number of folders.
 	int numFiles;
 	int totalSizeOfFiles;
 	ArrayList<TreeNode> listOfSubFolders = new ArrayList<TreeNode>();
