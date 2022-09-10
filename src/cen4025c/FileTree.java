@@ -58,18 +58,18 @@ public class FileTree {
 		fileTreeNode.name = path.getFileName().toString(); // Assign the current file/folder name to the current node.
 		DirectoryStream<Path> paths = Files.newDirectoryStream(path); // Create (put simply) an array of paths that you can loop through using the for-each method.
 		
-		// Loop through the paths.  
+		// Loop through the paths obtained from the DirectoryStream.
 		for(Path tempPath : paths) {
 			BasicFileAttributes fileAttributes = Files.readAttributes(tempPath, BasicFileAttributes.class); // Get the folder/file attributes for the current path.
 			/*
 			 * If the path points to a folder, create a new node, assign that node as a child of the current node, increment the number of folder up 1, and call the listFiles method again to step in another level.
-			 * Otherwise (else),  
+			 * Otherwise (else), the path points to a file, create a new node to represent that file and assign the name, numberOfFiles, and size variables. Finally, add the new file node to the current (folder) node. 
 			 */
 			if (fileAttributes.isDirectory()) {	
 				fileTreeNode.numberOfFolders++; // Increment up the number of folders.
 				FileTreeNode newNode = new FileTreeNode();
-				fileTreeNode.children.add(newNode);
-				scanFiles(newNode, tempPath);
+				fileTreeNode.children.add(newNode); // Add the new node to the children of the current node.
+				scanFiles(newNode, tempPath); // Scan the new node for more folders/files.
 				fileTreeNode.numberOfFolders += newNode.numberOfFolders; // Sums the total number of folder in the folder. This does not work if the number of folders is not incremented before the newNode is created.
 				fileTreeNode.numberOfFiles += newNode.numberOfFiles; // Sums the total number of files in the folder.
 				fileTreeNode.size += newNode.size; // Sums the size of all files in the folder.
@@ -82,8 +82,7 @@ public class FileTree {
 				newNode2.size = tempPath.toFile().length(); // Assign the size of the file to the new node.
 				fileTreeNode.children.add(newNode2); // Add the new node (representing a file) to the fileTreeNode (representing a folder).
 			}// End of if-else statement.
-		}
-		
+		} // End of for loop.
 	} // End of listFiles method.
 	
 	/**
@@ -103,7 +102,7 @@ public class FileTree {
 		// Loop through and display all the information for the nodes stored in the given node's children ArrayList.
 		for (FileTreeNode node : fileTreeNode.children) {
 			displayFileTree(node, depth + 1);
-		}
+		} // End of for loop.
 	} // End of displayTree method.
 	
 	/**
@@ -116,7 +115,7 @@ public class FileTree {
 		StringBuilder builder = new StringBuilder();
 		for(int i = 0; i < depth; i++) {
 			builder.append("    ");
-		}
+		} // End of for loop.
 		return builder.toString();
 	} // End of fileTreeLines method.
 

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 /**
  * Class for CEN 4025C, Software Development I, Assignment 1.
- * Created with guidance from the following tutorials:
- * 		1. Java Node Example, https://examples.javacodegeeks.com/java-node-example/
+ * 
+ * I removed all of the setters and getters in order to streamline the interaction and for time purposes.
  * 
  * @author Stephen Sturges Jr
  * @version 09/10/2022
@@ -18,7 +18,5 @@ public class FileTreeNode {
 	public long size;
 	public String name;
 	public ArrayList<FileTreeNode> children = new ArrayList<FileTreeNode>(); // I forgot to instantiate the children variable before by creating the new ArrayList.
-	
-	// I removed all of the setters and getters in order to streamline the interaction and for time purposes.
 	
 } // End of FileNode class.
