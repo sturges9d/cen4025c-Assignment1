@@ -21,9 +21,9 @@ public class TreeList {
 	}
 	
 	public static void listDir(TreeNode treeNode, Path path) throws Exception { 
-		DirectoryStream<Path> paths = Files.newDirectoryStream(path);
+		DirectoryStream<Path> paths = Files.newDirectoryStream(path); // Create [essentially] an array of paths that you can iterate over using the for-each method.
 		
-		treeNode.name = path.getFileName().toString();
+		treeNode.name = path.getFileName().toString(); // Assign the current file/folder name to the current node.
 		
 		for(Path tempPath: paths) {
 			BasicFileAttributes attr = Files.readAttributes(tempPath, BasicFileAttributes.class); // Get the folder/files attributes.
@@ -31,34 +31,57 @@ public class TreeList {
 			if(attr.isDirectory()) {
 				TreeNode t = new TreeNode(); // If the path is pointing to a directory, create a new tree node.
 				treeNode.listOfSubFolders.add(t); // Add the new tree node to the listOfSubFolders, AKA children.
+//				treeNode.isFolder = true;
+				treeNode.numFolders += 1;
 				listDir(t, tempPath); // Call the method again to go a level deeper.
+//				treeNode.totalSizeOfFiles += t.totalSizeOfFiles;
 			} else {
 				treeNode.numFiles++; // If the path is pointing to a file, increment the number of files up on the current node.
-				treeNode.totalSizeOfFiles += tempPath.toFile().length(); // Get the size of the file and add it to the total size stored in the node. 
+				treeNode.totalSizeOfFiles += tempPath.toFile().length(); // Get the size of the file and add it to the total size stored in the node.
+				TreeNode t2 = new TreeNode();
+				t2.name = tempPath.getFileName().toString();
+				t2.numFiles = 1;
+				t2.totalSizeOfFiles = (int) tempPath.toFile().length();
+				treeNode.listOfSubFolders.add(t2);
 			}
 		}
 	}
 	
 	public static void writeTree(TreeNode treeNode, int depth) throws Exception {
-		System.out.print(spacesForDepth(depth) + treeNode.name);
-		System.out.print(" " + treeNode.numFiles);
-		System.out.println(" " + treeNode.totalSizeOfFiles);
+		System.out.print(spacesForDepth(treeNode, depth) + treeNode.name); // Print the node (file/folder) name with spaces in front based on how deep in the directory it is.
+//		if (treeNode.numFolders > 0) {
+//			System.out.print(", " + treeNode.numFolders + " Folder(s)"); // Print the count of folders in the file.
+//		}
+//		if (treeNode.numFiles > 0) {
+//			System.out.print(", " + treeNode.numFiles + " File(s)"); // Print the count of files on the same line.
+//			System.out.println(", " + treeNode.totalSizeOfFiles + " bytes"); // Print the sum of the file sizes on the same line, and go to new line.
+//		}
+		System.out.print(", " + treeNode.numFolders + " Folder(s)"); // Print the count of folders in the file.
+		System.out.print(", " + treeNode.numFiles + " File(s)"); // Print the count of files on the same line.
+		System.out.println(", " + treeNode.totalSizeOfFiles + " bytes"); // Print the sum of the file sizes on the same line, and go to new line.
 		for(TreeNode node : treeNode.listOfSubFolders) {
-			writeTree(node, depth + 1);
+			writeTree(node, depth + 1); // Call this method again (recursive) and go down a level so that the output is indented.
 		}
 	}
 	
-	public static String spacesForDepth(int depth) {
+	public static String spacesForDepth(TreeNode treeNode, int depth) {
 		StringBuilder builder = new StringBuilder();
 		for(int i = 0; i < depth; i++) {
-			builder.append("  ");
+			builder.append("    ");
 		}
+//		if (treeNode.isFolder == true) {
+//			builder.append("+");
+//		} else {
+//			builder.append("-");
+//		}
 	return builder.toString();
 	}
 }
 
 class TreeNode {
 	String name;
+//	boolean isFolder; // Added for output symbol.
+	int numFolders; // Added number of folders.
 	int numFiles;
 	int totalSizeOfFiles;
 	ArrayList<TreeNode> listOfSubFolders = new ArrayList<TreeNode>();
