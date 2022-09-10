@@ -13,7 +13,7 @@ import java.util.Scanner;
  * Class for CEN 4025C, Software Development I, Assignment 1.
  * Created with guidance from this tutorial: https://youtu.be/UI1LV78WwZk
  * @author Stephen Sturges Jr.
- * @version 09/02/2022
+ * @version 09/10/2022
  */
 public class FileTree {
 
