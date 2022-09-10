@@ -34,24 +34,31 @@ public class TreeList {
 				listDir(t, tempPath); // Call the method again to go a level deeper.
 			} else {
 				treeNode.numFiles++; // If the path is pointing to a file, increment the number of files up on the current node.
-				treeNode.totalSizeOfFiles += tempPath.toFile().length(); // Get the size of the file and add it to the total size stored in the node. 
+				treeNode.totalSizeOfFiles += tempPath.toFile().length(); // Get the size of the file and add it to the total size stored in the node.
+				TreeNode t2 = new TreeNode();
+				t2.name = tempPath.getFileName().toString();
+				t2.numFiles = 1;
+				t2.totalSizeOfFiles = (int) tempPath.toFile().length();
+				treeNode.listOfSubFolders.add(t2);
+				// TODO Add a Folder count to this.
+				// TODO Add boolean if node is a folder or not. To denote folder vs file. Use this to put a symbol at the front of the folder/file name to denote folder(+) or file(-).
 			}
 		}
 	}
 	
 	public static void writeTree(TreeNode treeNode, int depth) throws Exception {
-		System.out.print(spacesForDepth(depth) + treeNode.name);
-		System.out.print(" " + treeNode.numFiles);
-		System.out.println(" " + treeNode.totalSizeOfFiles);
+		System.out.print(spacesForDepth(depth) + treeNode.name); // Print the node (file/folder) name with spaces in front based on how deep in the directory it is.
+		System.out.print(", " + treeNode.numFiles + " File(s)"); // Print the count of files on the same line.
+		System.out.println(", " + treeNode.totalSizeOfFiles + " bytes"); // Print the sum of the file sizes on the same line, and go to new line.
 		for(TreeNode node : treeNode.listOfSubFolders) {
-			writeTree(node, depth + 1);
+			writeTree(node, depth + 1); // Call this method again (recursive) and go down a level so that the output is indented.
 		}
 	}
 	
 	public static String spacesForDepth(int depth) {
 		StringBuilder builder = new StringBuilder();
 		for(int i = 0; i < depth; i++) {
-			builder.append("  ");
+			builder.append("    ");
 		}
 	return builder.toString();
 	}
