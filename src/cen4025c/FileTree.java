@@ -7,7 +7,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Iterator;
 import java.util.Scanner;
 
 /**
@@ -19,11 +18,10 @@ import java.util.Scanner;
  */
 public class FileTree {
 
-	static FileTreeNode root;
+	static FileTreeNode root; // The first node to be created and modified.
 	
 	public static void main(String[] args) throws Exception {
-		// TODO: Remove debugging line below.
-		System.out.println("Current directory: " + System.getProperty("user.dir"));
+		System.out.println("Current directory: " + System.getProperty("user.dir")); // Prints the current directory for user's convenience.
 		
 		// Get user input.
 		Scanner input = new Scanner(System.in);
@@ -36,26 +34,25 @@ public class FileTree {
 		
 		// Create path to file.
 		Path folderPath = Paths.get(folderURI);
-		
+		// Instantiate the root node.
 		root = new FileTreeNode();
 		
 		scanFiles(root, folderPath);
 		System.out.println("\nOutput Legend:\n<Folder/File Name>, <# Folders>, <# Files>, <Total Size (bytes)>\n");
 		displayFileTree(root, 0);
-		
-		
-		// TODO: Decide about removing the debugging line below.
 		System.out.println("End of Directory.");
 
 	} // End of main method.
 	
 	/**
+	 * Loops through a directory, assigns name, #folders, #files, and total size to a node, and continues until there are no more folders/files.
 	 * 
+	 * In my original program I had the for loop contained in the if-else statement, which was based off the Tree Reversal tutorial. This caused trouble when I was trying to figure out how to sum the variables
+	 * for each node. So, I simplified my node class to make it easier to assign variables (and for time), renamed my node class to FileTreeNode to associate it with this class, 
 	 * 
-	 * @param	fileTreeNode
-	 * @param	path
-	 * @param	depth
-	 * @throws	Exception
+	 * @param	fileTreeNode	The current node whose variables will be modified.
+	 * @param	path			The current path of the folder/file to be scanned.
+	 * @throws	Exception		An unhandled exception.
 	 */
 	public static void scanFiles(FileTreeNode fileTreeNode, Path path) throws Exception {
 		fileTreeNode.name = path.getFileName().toString(); // Assign the current file/folder name to the current node.
@@ -64,18 +61,17 @@ public class FileTree {
 		// Loop through the paths.  
 		for(Path tempPath : paths) {
 			BasicFileAttributes fileAttributes = Files.readAttributes(tempPath, BasicFileAttributes.class); // Get the folder/file attributes for the current path.
-
 			/*
 			 * If the path points to a folder, create a new node, assign that node as a child of the current node, increment the number of folder up 1, and call the listFiles method again to step in another level.
 			 * Otherwise (else),  
 			 */
 			if (fileAttributes.isDirectory()) {	
-				fileTreeNode.numberOfFolders++;
+				fileTreeNode.numberOfFolders++; // Increment up the number of folders.
 				FileTreeNode newNode = new FileTreeNode();
 				fileTreeNode.children.add(newNode);
 				scanFiles(newNode, tempPath);
-				fileTreeNode.numberOfFolders += newNode.numberOfFolders;
-				fileTreeNode.numberOfFiles += newNode.numberOfFiles;
+				fileTreeNode.numberOfFolders += newNode.numberOfFolders; // Sums the total number of folder in the folder. This does not work if the number of folders is not incremented before the newNode is created.
+				fileTreeNode.numberOfFiles += newNode.numberOfFiles; // Sums the total number of files in the folder.
 				fileTreeNode.size += newNode.size; // Sums the size of all files in the folder.
 			} else {
 				fileTreeNode.numberOfFiles++; // If the path is pointing to a file, increment the number of files up on the current node.
@@ -90,7 +86,12 @@ public class FileTree {
 		
 	} // End of listFiles method.
 	
-	// TODO finish this method.
+	/**
+	 * Outputs the given node's variables indented corresponding to the node's location the the file tree hierarchy.
+	 * 
+	 * @param fileTreeNode	The node whose variable are to be output to the console. 
+	 * @param depth			Controls the indentation of the node's variables. Works with the fileTreeSpaces method.
+	 */
 	public static void displayFileTree(FileTreeNode fileTreeNode, int depth) {
 		System.out.println(fileTreeSpaces(depth)
 							+ fileTreeNode.name
@@ -99,13 +100,18 @@ public class FileTree {
 							+ ", "
 							+ fileTreeNode.numberOfFiles
 							+ ", " + fileTreeNode.size);
-		// Loop through all the node stored in the given node's children ArrayList and call the displayFileTree method again to display them.
+		// Loop through and display all the information for the nodes stored in the given node's children ArrayList.
 		for (FileTreeNode node : fileTreeNode.children) {
 			displayFileTree(node, depth + 1);
 		}
 	} // End of displayTree method.
 	
-	// TODO finish this method.
+	/**
+	 * Used for indenting folder/file names when outputting the file tree to the console. Borrowed from the Tree Reversal video tutorial.
+	 * 
+	 * @param	depth The level where a folder/file is in the hierarchy of the file tree.
+	 * @return	String with depth number of four space blocks.
+	 */
 	public static String fileTreeSpaces(int depth) {
 		StringBuilder builder = new StringBuilder();
 		for(int i = 0; i < depth; i++) {
