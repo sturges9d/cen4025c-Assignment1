@@ -21,9 +21,9 @@ public class TreeList {
 	}
 	
 	public static void listDir(TreeNode treeNode, Path path) throws Exception { 
-		DirectoryStream<Path> paths = Files.newDirectoryStream(path);
+		DirectoryStream<Path> paths = Files.newDirectoryStream(path); // Create [essentially] an array of paths that you can iterate over using the for-each method.
 		
-		treeNode.name = path.getFileName().toString();
+		treeNode.name = path.getFileName().toString(); // Assign the current file/folder name to the current node.
 		
 		for(Path tempPath: paths) {
 			BasicFileAttributes attr = Files.readAttributes(tempPath, BasicFileAttributes.class); // Get the folder/files attributes.
