@@ -48,7 +48,8 @@ public class FileTree {
 	 * Loops through a directory, assigns name, #folders, #files, and total size to a node, and continues until there are no more folders/files.
 	 * 
 	 * In my original program I had the for loop contained in the if-else statement, which was based off the Tree Reversal tutorial. This caused trouble when I was trying to figure out how to sum the variables
-	 * for each node. So, I simplified my node class to make it easier to assign variables (and for time), renamed my node class to FileTreeNode to associate it with this class, 
+	 * for each node. So, I simplified my node class to make it easier to assign variables (as well as for time), renamed my node class to FileTreeNode to associate it with this class, reorganized the for loop
+	 * and if-else statement, and added the total folder count to imitate the output of Window's folder properties. 
 	 * 
 	 * @param	fileTreeNode	The current node whose variables will be modified.
 	 * @param	path			The current path of the folder/file to be scanned.
